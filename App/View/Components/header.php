@@ -1,5 +1,5 @@
+<?php include __DIR__ . '/menu.php'; ?>
 <?php
-
 $usuarioLogado = isset($_SESSION['usuario_logado']);
 ?>
 
