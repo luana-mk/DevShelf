@@ -20,7 +20,7 @@ $page = $_GET['p'] ?? 'home';
 </head>
 <body>
 
-    <?php require_once("./App/View/components/header.php"); ?>
+    <?php require_once("./App/config/database.php"); ?>
 
     <?php
         
