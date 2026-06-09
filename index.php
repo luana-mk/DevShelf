@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 session_start();
 
+require_once('./autoload.php');
+require_once('./App/Controller/UsuarioController.php');
+UsuarioController::tentarLembrar();
+
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
