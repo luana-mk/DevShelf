@@ -1,61 +1,66 @@
 <?php
-// models/Item.php
 
 class Item {
-    private $db;
+    private PDO $db;
 
-    // Recebe a conexão PDO existente pelo construtor
-    public function __construct($conexao) {
+    public function __construct(PDO $conexao) {
         $this->db = $conexao;
     }
 
-    // [C]REATE - Inserir item
-    public function criar($titulo, $descricao, $url, $tipo) {
-        $sql = "INSERT INTO items (title, description, url, type) VALUES (:titulo, :descricao, :url, :tipo)";
+    public function criar($titulo, $categoria, $descricao, $imagem): bool {
+        $sql = "INSERT INTO itens (titulo, categoria, descricao, imagem)
+                VALUES (:titulo, :categoria, :descricao, :imagem)";
+
         $stmt = $this->db->prepare($sql);
-        
+
         return $stmt->execute([
-            ':titulo'    => htmlspecialchars(strip_tags($titulo)),
+            ':titulo' => htmlspecialchars(strip_tags($titulo)),
+            ':categoria' => htmlspecialchars(strip_tags($categoria)),
             ':descricao' => htmlspecialchars(strip_tags($descricao)),
-            ':url'       => htmlspecialchars(strip_tags($url)),
-            ':tipo'      => htmlspecialchars(strip_tags($tipo))
+            ':imagem' => htmlspecialchars(strip_tags($imagem))
         ]);
     }
 
-    // [R]EAD - Listar todos os itens
-    public function listarTodos() {
-        $sql = "SELECT * FROM items ORDER BY created_at DESC";
+    public function listarTodos(): array {
+        $sql = "SELECT * FROM itens ORDER BY criado_em DESC";
         $stmt = $this->db->query($sql);
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // [R]EAD - Buscar um único item (para edição)
-    public function buscarPorId($id) {
-        $sql = "SELECT * FROM items WHERE id = :id";
+    public function buscarPorId($id): array|false {
+        $sql = "SELECT * FROM itens WHERE id = :id";
+
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $id]);
+
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // [U]PDATE - Atualizar item existente
-    public function atualizar($id, $titulo, $descricao, $url, $tipo) {
-        $sql = "UPDATE items SET title = :titulo, description = :descricao, url = :url, type = :tipo WHERE id = :id";
+    public function atualizar($id, $titulo, $categoria, $descricao, $imagem): bool {
+        $sql = "UPDATE itens
+                SET titulo = :titulo,
+                    categoria = :categoria,
+                    descricao = :descricao,
+                    imagem = :imagem
+                WHERE id = :id";
+
         $stmt = $this->db->prepare($sql);
-        
+
         return $stmt->execute([
-            ':id'        => $id,
-            ':titulo'    => htmlspecialchars(strip_tags($titulo)),
+            ':id' => $id,
+            ':titulo' => htmlspecialchars(strip_tags($titulo)),
+            ':categoria' => htmlspecialchars(strip_tags($categoria)),
             ':descricao' => htmlspecialchars(strip_tags($descricao)),
-            ':url'       => htmlspecialchars(strip_tags($url)),
-            ':tipo'      => htmlspecialchars(strip_tags($tipo))
+            ':imagem' => htmlspecialchars(strip_tags($imagem))
         ]);
     }
 
-    // [D]ELETE - Excluir um item
-    public function deletar($id) {
-        $sql = "DELETE FROM items WHERE id = :id";
+    public function deletar($id): bool {
+        $sql = "DELETE FROM itens WHERE id = :id";
+
         $stmt = $this->db->prepare($sql);
+
         return $stmt->execute([':id' => $id]);
     }
 }
-?>

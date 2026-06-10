@@ -16,34 +16,44 @@
 
     <h1>Indicar Livro ou Ferramenta</h1>
     
-    <form action="index.php?action=cadastrar" method="POST">
-        <div class="campo">
-            <label>Título:</label>
-            <input type="text" name="title" required>
-        </div>
+    <form action="?p=criar-item" method="POST">
 
-        <div class="campo">
-            <label>Tipo:</label>
-            <select name="type" required>
-                <option value="livro">Livro</option>
-                <option value="curso">Curso</option>
-                <option value="ferramenta">Ferramenta</option>
-            </select>
-        </div>
+    <input type="hidden" name="csrf_token"
+           value="<?= $_SESSION['csrf_token'] ?>">
 
-        <div class="campo">
-            <label>URL / Link de Acesso:</label>
-            <input type="url" name="url" placeholder="https://" required>
-        </div>
+    <div class="campo">
+        <label>Título:</label>
+        <input type="text" name="titulo" required>
+    </div>
 
-        <div class="campo">
-            <label>Descrição:</label>
-            <textarea name="description" rows="5" required></textarea>
-        </div>
+    <div class="campo">
+        <label>Categoria:</label>
+        <select name="categoria" required>
+            <option value="Livro">Livro</option>
+            <option value="Curso">Curso</option>
+            <option value="Ferramenta">Ferramenta</option>
+            <option value="Periférico">Periférico</option>
+            <option value="Setup">Setup</option>
+        </select>
+    </div>
 
-        <button type="submit">Salvar Indicação</button>
-        <a href="index.php" class="voltar">⬅ Voltar</a>
-    </form>
+    <div class="campo">
+        <label>Imagem (URL):</label>
+        <input type="text" name="imagem">
+    </div>
+
+    <div class="campo">
+        <label>Descrição:</label>
+        <textarea name="descricao" rows="5" required></textarea>
+    </div>
+
+    <button type="submit">Salvar Indicação</button>
+
+    <a href="?p=listar-itens" class="voltar">
+        ⬅ Voltar
+    </a>
+
+</form>
 
 </body>
 </html>

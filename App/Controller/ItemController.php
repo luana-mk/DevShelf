@@ -31,55 +31,61 @@ class ItemController
             die('Token inválido.');
         }
 
-        $titulo = trim($_POST['title'] ?? '');
-        $descricao = trim($_POST['description'] ?? '');
-        $url = trim($_POST['url'] ?? '');
-        $tipo = trim($_POST['type'] ?? '');
+        $titulo = trim($_POST['titulo'] ?? '');
+        $categoria = trim($_POST['categoria'] ?? '');
+        $descricao = trim($_POST['descricao'] ?? '');
+        $imagem = trim($_POST['imagem'] ?? '');
 
-        if ($titulo === '' || $descricao === '' || $tipo === '') {
+        if ($titulo === '' || $categoria === '' || $descricao === '') {
             header('Location: ?p=criar-item&erro=campos');
             exit;
         }
 
-        $this->model->criar($titulo, $descricao, $url, $tipo);
+        $this->model->criar($titulo, $categoria, $descricao, $imagem);
 
         header('Location: ?p=listar-itens&sucesso=1');
         exit;
     }
 
     public function editar(): void
-    {
-        $id = (int) ($_GET['id'] ?? 0);
+{
+    $id = (int) ($_GET['id'] ?? 0);
 
-        if ($id <= 0) {
-            header('Location: ?p=listar-itens&erro=item');
-            exit;
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (!$this->validarCsrf()) {
-                die('Token inválido.');
-            }
-
-            $titulo = trim($_POST['title'] ?? '');
-            $descricao = trim($_POST['description'] ?? '');
-            $url = trim($_POST['url'] ?? '');
-            $tipo = trim($_POST['type'] ?? '');
-
-            if ($titulo === '' || $descricao === '' || $tipo === '') {
-                header('Location: ?p=editar-item&id=' . $id . '&erro=campos');
-                exit;
-            }
-
-            $this->model->atualizar($id, $titulo, $descricao, $url, $tipo);
-
-            header('Location: ?p=listar-itens&sucesso=editado');
-            exit;
-        }
-
-        $item = $this->model->buscarPorId($id);
-        require_once __DIR__ . '/../View/editar_item.php';
+    if ($id <= 0) {
+        header('Location: ?p=listar-itens&erro=item');
+        exit;
     }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (!$this->validarCsrf()) {
+            die('Token inválido.');
+        }
+
+        $titulo = trim($_POST['titulo'] ?? '');
+        $categoria = trim($_POST['categoria'] ?? '');
+        $descricao = trim($_POST['descricao'] ?? '');
+        $imagem = trim($_POST['imagem'] ?? '');
+
+        if ($titulo === '' || $categoria === '' || $descricao === '') {
+            header('Location: ?p=editar-item&id=' . $id . '&erro=campos');
+            exit;
+        }
+
+        $this->model->atualizar($id, $titulo, $categoria, $descricao, $imagem);
+
+        header('Location: ?p=listar-itens&sucesso=editado');
+        exit;
+    }
+
+    $item = $this->model->buscarPorId($id);
+
+    if (!$item) {
+        header('Location: ?p=listar-itens&erro=item-nao-encontrado');
+        exit;
+    }
+
+    require_once __DIR__ . '/../View/editar_item.php';
+}
 
     public function excluir(): void
     {

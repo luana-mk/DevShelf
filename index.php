@@ -4,7 +4,10 @@ declare(strict_types=1);
 session_start();
 
 require_once('./autoload.php');
+require_once('./App/Config/conexao.php');
 require_once('./App/Controller/UsuarioController.php');
+require_once('./App/Controller/ItemController.php');
+
 UsuarioController::tentarLembrar();
 
 if (empty($_SESSION['csrf_token'])) {
@@ -12,7 +15,6 @@ if (empty($_SESSION['csrf_token'])) {
 }
 
 $page = $_GET['p'] ?? 'home';
-
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -24,32 +26,33 @@ $page = $_GET['p'] ?? 'home';
 </head>
 <body>
 
-    <?php require_once("./App/View/Components/header.php"); ?>
+<?php require_once("./App/View/Components/header.php"); ?>
 
-    <?php
-        
-        match($page) {
-            
-            'home' => require_once("./App/View/home.php"),
-            'explorar' => require_once("./App/View/explorar.php"),
-            'sobre' => require_once("./App/View/sobre.php"),
-            'detalhes' => require_once("./App/View/detalhes.php"),
-            
-            
-            'login' => require_once("./App/View/login.php"),
-            'cadastro-usuario' => require_once("./App/View/cadastro_usuario.php"),
-            'recuperar' => require_once("./App/View/recuperar_senha.php"),
-            
-            
-            'escrever-review' => require_once("./App/View/escrever_review.php"),
+<?php
+match ($page) {
+    'home' => require_once("./App/View/home.php"),
+    'explorar' => require_once("./App/View/explorar.php"),
+    'sobre' => require_once("./App/View/sobre.php"),
+    'detalhes' => require_once("./App/View/detalhes.php"),
 
-            'logout' => UsuarioController::logout(),
-            
-            default => require_once("./App/View/home.php")
-        };
-    ?>
+    'listar-itens' => (new ItemController($pdo))->index(),
+    'criar-item' => (new ItemController($pdo))->cadastrar(),
+    'editar-item' => (new ItemController($pdo))->editar(),
+    'excluir-item' => (new ItemController($pdo))->excluir(),
 
-    <?php require_once("./App/View/Components/footer.php"); ?>
+    'login' => require_once("./App/View/login.php"),
+    'cadastro-usuario' => require_once("./App/View/cadastro_usuario.php"),
+    'recuperar' => require_once("./App/View/recuperar_senha.php"),
+
+    'escrever-review' => require_once("./App/View/escrever_review.php"),
+
+    'logout' => UsuarioController::logout(),
+
+    default => require_once("./App/View/home.php")
+};
+?>
+
+<?php require_once("./App/View/Components/footer.php"); ?>
 
 </body>
 </html>

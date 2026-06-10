@@ -16,33 +16,38 @@
 
     <h1>Editar Indicação</h1>
     
-    <form action="index.php?action=editar&id=<?php echo $item['id']; ?>" method="POST">
+    <form action="?p=editar-item&id=<?php echo $item['id']; ?>" method="POST">
+
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+
         <div class="campo">
             <label>Título:</label>
-            <input type="text" name="title" value="<?php echo htmlspecialchars($item['title']); ?>" required>
+            <input type="text" name="titulo" value="<?php echo htmlspecialchars($item['titulo']); ?>" required>
         </div>
 
         <div class="campo">
-            <label>Tipo:</label>
-            <select name="type" required>
-                <option value="livro" <?php echo $item['type'] == 'livro' ? 'selected' : ''; ?>>Livro</option>
-                <option value="curso" <?php echo $item['type'] == 'curso' ? 'selected' : ''; ?>>Curso</option>
-                <option value="ferramenta" <?php echo $item['type'] == 'ferramenta' ? 'selected' : ''; ?>>Ferramenta</option>
+            <label>Categoria:</label>
+            <select name="categoria" required>
+                <option value="Livro" <?php echo $item['categoria'] == 'Livro' ? 'selected' : ''; ?>>Livro</option>
+                <option value="Curso" <?php echo $item['categoria'] == 'Curso' ? 'selected' : ''; ?>>Curso</option>
+                <option value="Ferramenta" <?php echo $item['categoria'] == 'Ferramenta' ? 'selected' : ''; ?>>Ferramenta</option>
+                <option value="Periférico" <?php echo $item['categoria'] == 'Periférico' ? 'selected' : ''; ?>>Periférico</option>
+                <option value="Setup" <?php echo $item['categoria'] == 'Setup' ? 'selected' : ''; ?>>Setup</option>
             </select>
         </div>
 
         <div class="campo">
-            <label>URL / Link de Acesso:</label>
-            <input type="url" name="url" value="<?php echo htmlspecialchars($item['url']); ?>" required>
+            <label>Imagem (URL):</label>
+            <input type="text" name="imagem" value="<?php echo htmlspecialchars($item['imagem'] ?? ''); ?>">
         </div>
 
         <div class="campo">
             <label>Descrição:</label>
-            <textarea name="description" rows="5" required><?php echo htmlspecialchars($item['description']); ?></textarea>
+            <textarea name="descricao" rows="5" required><?php echo htmlspecialchars($item['descricao']); ?></textarea>
         </div>
 
         <button type="submit">Salvar Alterações</button>
-        <a href="index.php" class="voltar">Anular e Voltar</a>
+        <a href="?p=listar-itens" class="voltar">Anular e Voltar</a>
     </form>
 
 </body>
