@@ -1,56 +1,109 @@
 <?php
-// controllers/ItemController.php
 
-require_once 'conexao.php'; // Inclui a sua conexão existente
-require_once 'models/Item.php';
+declare(strict_types=1);
 
-class ItemController {
-    private $model;
+require_once __DIR__ . '/../Config/conexao.php';
+require_once __DIR__ . '/../Model/Item.php';
 
-    public function __construct() {
-        global $conexao; // Usa a variável de conexão criada no seu conexao.php
-        $this->model = new Item($conexao);
+class ItemController
+{
+    private Item $model;
+
+    public function __construct(PDO $pdo)
+    {
+        $this->model = new Item($pdo);
     }
 
-    // Listar todos
-    public function index() {
+    public function index(): void
+    {
         $items = $this->model->listarTodos();
-        require_once 'views/listar.php';
+        require_once __DIR__ . '/../View/listar_itens.php';
     }
 
-    // Criar novo
-    public function cadastrar() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->model->criar($_POST['title'], $_POST['description'], $_POST['url'], $_POST['type']);
-            header('Location: index.php');
+    public function cadastrar(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            require_once __DIR__ . '/../View/criar_item.php';
+            return;
+        }
+
+        if (!$this->validarCsrf()) {
+            die('Token inválido.');
+        }
+
+        $titulo = trim($_POST['title'] ?? '');
+        $descricao = trim($_POST['description'] ?? '');
+        $url = trim($_POST['url'] ?? '');
+        $tipo = trim($_POST['type'] ?? '');
+
+        if ($titulo === '' || $descricao === '' || $tipo === '') {
+            header('Location: ?p=criar-item&erro=campos');
             exit;
         }
-        require_once 'views/criar.php';
+
+        $this->model->criar($titulo, $descricao, $url, $tipo);
+
+        header('Location: ?p=listar-itens&sucesso=1');
+        exit;
     }
 
-    // Editar existente
-    public function editar() {
-        $id = $_GET['id'] ?? null;
-        if (!$id) { header('Location: index.php'); exit; }
+    public function editar(): void
+    {
+        $id = (int) ($_GET['id'] ?? 0);
+
+        if ($id <= 0) {
+            header('Location: ?p=listar-itens&erro=item');
+            exit;
+        }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->model->atualizar($id, $_POST['title'], $_POST['description'], $_POST['url'], $_POST['type']);
-            header('Location: index.php');
+            if (!$this->validarCsrf()) {
+                die('Token inválido.');
+            }
+
+            $titulo = trim($_POST['title'] ?? '');
+            $descricao = trim($_POST['description'] ?? '');
+            $url = trim($_POST['url'] ?? '');
+            $tipo = trim($_POST['type'] ?? '');
+
+            if ($titulo === '' || $descricao === '' || $tipo === '') {
+                header('Location: ?p=editar-item&id=' . $id . '&erro=campos');
+                exit;
+            }
+
+            $this->model->atualizar($id, $titulo, $descricao, $url, $tipo);
+
+            header('Location: ?p=listar-itens&sucesso=editado');
             exit;
         }
 
         $item = $this->model->buscarPorId($id);
-        require_once 'views/editar.php';
+        require_once __DIR__ . '/../View/editar_item.php';
     }
 
-    // Excluir
-    public function excluir() {
-        $id = $_GET['id'] ?? null;
-        if ($id) {
+    public function excluir(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ?p=listar-itens');
+            exit;
+        }
+
+        if (!$this->validarCsrf()) {
+            die('Token inválido.');
+        }
+
+        $id = (int) ($_POST['id'] ?? 0);
+
+        if ($id > 0) {
             $this->model->deletar($id);
         }
-        header('Location: index.php');
+
+        header('Location: ?p=listar-itens&sucesso=excluido');
         exit;
     }
+
+    private function validarCsrf(): bool
+    {
+        return isset($_POST['csrf_token']) && hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token']);
+    }
 }
-?>

@@ -21,7 +21,7 @@ class ReviewController
         }
 
         // valida CSRF
-        if (empty($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        if (empty($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'])) {
             die('Token inválido.');
         }
 

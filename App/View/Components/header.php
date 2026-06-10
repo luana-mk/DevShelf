@@ -1,6 +1,6 @@
 <?php
 
-$usuarioLogado = isset($_SESSION['usuario_logado']);
+$usuarioLogado = isset($_SESSION['usuario_id']);
 ?>
 
 <header class="cabecalho-principal">
