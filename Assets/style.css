@@ -365,122 +365,14 @@ select.input-dark option {
 }
 
 .btn-sair {
-    border-color: #f16769; 
-    color: #f16769;
-}
-
-.btn-neon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background: linear-gradient(135deg, #58a6ff, #79c0ff);
-    color: #07111f;
-    padding: 10px 16px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 700;
-    border: 1px solid rgba(121, 192, 255, 0.35);
-}
-
-.btn-neon.pequeno {
-    padding: 8px 12px;
-    font-size: 0.9rem;
-}
-
-.btn-danger {
-    background: linear-gradient(135deg, #f16769, #ff8a8a);
+    border-color: #ff4444; 
+    color: #ff4444;
 }
 
 .btn-sair:hover {
-    background-color: #f16769;
+    background-color: #ff4444;
     color: #ffffff;
     box-shadow: 0 0 10px rgba(255, 68, 68, 0.4);
-}
-
-.grid-duplo {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 24px;
-    margin-bottom: 24px;
-}
-
-.form-colecao,
-.inline-form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.form-colecao label,
-.form-colecao span {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    color: var(--texto-principal);
-    font-size: 0.95rem;
-}
-
-.select-pequeno {
-    min-width: 180px;
-}
-
-.lista-simples,
-.lista-itens-colecao {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.item-mini {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 12px;
-    border: var(--borda-suave);
-    border-radius: 10px;
-    background: rgba(22, 27, 34, 0.75);
-}
-
-.item-mini small,
-.texto-secundario {
-    color: var(--texto-secundario);
-}
-
-.lista-itens-colecao li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.btn-link {
-    background: none;
-    border: none;
-    color: #79c0ff;
-    cursor: pointer;
-    text-decoration: underline;
-}
-
-.mensagem-sucesso,
-.mensagem-erro {
-    padding: 12px 14px;
-    border-radius: 8px;
-    margin-bottom: 16px;
-}
-
-.mensagem-sucesso {
-    background: rgba(86, 211, 100, 0.12);
-    border: 1px solid rgba(86, 211, 100, 0.35);
-    color: #b7f4c7;
-}
-
-.mensagem-erro {
-    background: rgba(240, 102, 102, 0.12);
-    border: 1px solid rgba(240, 102, 102, 0.35);
-    color: #ffc9c9;
 }
 
 .hero-section {

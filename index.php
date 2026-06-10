@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 session_start();
 
+require_once('./autoload.php');
+require_once('./App/Controller/UsuarioController.php');
+UsuarioController::tentarLembrar();
+
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
-
-require_once './App/Config/conexao.php';
 
 $page = $_GET['p'] ?? 'home';
 
@@ -18,7 +20,7 @@ $page = $_GET['p'] ?? 'home';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DevForge Reviews - A Comunidade de TI</title>
-    <link rel="stylesheet" href="./Assets/style.css">
+    <link rel="stylesheet" href="./assets/style.css">
 </head>
 <body>
 
@@ -38,33 +40,6 @@ $page = $_GET['p'] ?? 'home';
             'recuperar' => require_once("./App/View/recuperar_senha.php"),
             
             'escrever-review' => require_once("./App/View/escrever_review.php"),
-            'minhas-listas' => require_once("./App/View/minhas_listas.php"),
-            
-            'salvar-review' => (function() use ($pdo) {
-                require_once './App/Controller/ReviewController.php';
-                $controller = new ReviewController($pdo);
-                $controller->salvar();
-            })(),
-            'criar-colecao' => (function() use ($pdo) {
-                require_once './App/Controller/ColecaoController.php';
-                $controller = new ColecaoController($pdo);
-                $controller->criar();
-            })(),
-            'adicionar-item-colecao' => (function() use ($pdo) {
-                require_once './App/Controller/ColecaoController.php';
-                $controller = new ColecaoController($pdo);
-                $controller->adicionarItem();
-            })(),
-            'remover-item-colecao' => (function() use ($pdo) {
-                require_once './App/Controller/ColecaoController.php';
-                $controller = new ColecaoController($pdo);
-                $controller->removerItem();
-            })(),
-            'remover-colecao' => (function() use ($pdo) {
-                require_once './App/Controller/ColecaoController.php';
-                $controller = new ColecaoController($pdo);
-                $controller->removerColecao();
-            })(),
             
             default => require_once("./App/View/home.php")
         };

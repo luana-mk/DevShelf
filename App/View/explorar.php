@@ -14,7 +14,6 @@
                 <div class="estrelas">★★★★★</div>
                 <a href="?p=detalhes&id=1" class="link-detalhes">Ler 14 Respostas</a>
             </div>
-            <a href="?p=minhas-listas" class="btn-neon pequeno">Adicionar à coleção</a>
         </article>
 
         <article class="card-item">
@@ -27,7 +26,6 @@
                 <div class="estrelas">★★★★☆</div>
                 <a href="?p=detalhes&id=2" class="link-detalhes">Ler 8 Respostas</a>
             </div>
-            <a href="?p=minhas-listas" class="btn-neon pequeno">Adicionar à coleção</a>
         </article>
 
         <article class="card-item">
@@ -40,7 +38,6 @@
                 <div class="estrelas">★★★★★</div>
                 <a href="?p=detalhes&id=3" class="link-detalhes">Ler 32 Respostas</a>
             </div>
-            <a href="?p=minhas-listas" class="btn-neon pequeno">Adicionar à coleção</a>
         </article>
     </div>
 </main>
