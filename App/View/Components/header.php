@@ -11,6 +11,7 @@ $usuarioLogado = isset($_SESSION['usuario_logado']);
         <nav class="menu-navegacao">
             <a href="?p=home">Home</a>
             <a href="?p=explorar">Explorar</a>
+            <a href="?p=minhas-listas">Minhas Listas</a>
             <a href="?p=sobre">Comunidade</a>
         </nav>
         
