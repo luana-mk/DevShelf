@@ -7,6 +7,8 @@ if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
+require_once './App/Config/conexao.php';
+
 $page = $_GET['p'] ?? 'home';
 
 ?>
@@ -36,6 +38,12 @@ $page = $_GET['p'] ?? 'home';
             'recuperar' => require_once("./App/View/recuperar_senha.php"),
             
             'escrever-review' => require_once("./App/View/escrever_review.php"),
+            
+            'salvar-review' => (function() use ($pdo) {
+                require_once './App/Controller/ReviewController.php';
+                $controller = new ReviewController($pdo);
+                $controller->salvar();
+            })(),
             
             default => require_once("./App/View/home.php")
         };

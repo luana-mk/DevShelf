@@ -365,12 +365,12 @@ select.input-dark option {
 }
 
 .btn-sair {
-    border-color: #ff4444; 
-    color: #ff4444;
+    border-color: #f16769; 
+    color: #f16769;
 }
 
 .btn-sair:hover {
-    background-color: #ff4444;
+    background-color: #f16769;
     color: #ffffff;
     box-shadow: 0 0 10px rgba(255, 68, 68, 0.4);
 }
