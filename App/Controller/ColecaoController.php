@@ -15,7 +15,7 @@ class ColecaoController
 
     public function criar(): void
     {
-        if (empty($_SESSION['usuario_logado'])) {
+        if (empty($_SESSION['usuario_id'])) {
             header('Location: ?p=login');
             exit;
         }
@@ -26,7 +26,7 @@ class ColecaoController
 
         $nome = trim((string) ($_POST['nome'] ?? ''));
         $descricao = trim((string) ($_POST['descricao'] ?? ''));
-        $usuario_id = (int) $_SESSION['usuario_logado']['id'];
+        $usuario_id = (int) $_SESSION['usuario_id'];
 
         if ($nome === '') {
             header('Location: ?p=minhas-listas&erro=nome');
@@ -41,7 +41,7 @@ class ColecaoController
 
     public function adicionarItem(): void
     {
-        if (empty($_SESSION['usuario_logado'])) {
+        if (empty($_SESSION['usuario_id'])) {
             header('Location: ?p=login');
             exit;
         }
@@ -66,7 +66,7 @@ class ColecaoController
 
     public function removerItem(): void
     {
-        if (empty($_SESSION['usuario_logado'])) {
+        if (empty($_SESSION['usuario_id'])) {
             header('Location: ?p=login');
             exit;
         }
@@ -86,7 +86,7 @@ class ColecaoController
 
     public function removerColecao(): void
     {
-        if (empty($_SESSION['usuario_logado'])) {
+        if (empty($_SESSION['usuario_id'])) {
             header('Location: ?p=login');
             exit;
         }
@@ -96,7 +96,7 @@ class ColecaoController
         }
 
         $colecao_id = (int) ($_POST['colecao_id'] ?? 0);
-        $usuario_id = (int) $_SESSION['usuario_logado']['id'];
+        $usuario_id = (int) $_SESSION['usuario_id'];
 
         $this->model->removerColecao($colecao_id, $usuario_id);
 

@@ -15,7 +15,7 @@ class ReviewController
     public function salvar(): void
     {
         // bloqueia se não estiver logado
-        if (empty($_SESSION['usuario_logado'])) {
+        if (empty($_SESSION['usuario_id'])) {
             header('Location: ?p=login');
             exit;
         }
@@ -29,7 +29,7 @@ class ReviewController
         $nota = (int) ($_POST['nota'] ?? 0);
         $titulo = trim($_POST['titulo_review'] ?? '');
         $comentario = trim($_POST['comentario'] ?? '');
-        $usuario_id = (int) $_SESSION['usuario_logado']['id'];
+        $usuario_id = (int) $_SESSION['usuario_id'];
 
         // validações básicas
         if ($item_id <= 0 || $nota < 1 || $nota > 5 || $titulo === '' || $comentario === '') {
