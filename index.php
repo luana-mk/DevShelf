@@ -3,14 +3,36 @@ declare(strict_types=1);
 
 session_start();
 
+require_once('./autoload.php');
+require_once('./App/Config/conexao.php');
+require_once('./App/Controller/UsuarioController.php');
+require_once('./App/Controller/ItemController.php');
+require_once('./App/Controller/ReviewController.php');
+require_once('./App/Controller/ColecaoController.php');
+
+UsuarioController::tentarLembrar();
+
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-require_once './App/Config/conexao.php';
-
 $page = $_GET['p'] ?? 'home';
 
+if ($page === 'criar-colecao') {
+    (new ColecaoController($pdo))->criar();
+}
+
+if ($page === 'remover-colecao') {
+    (new ColecaoController($pdo))->removerColecao();
+}
+
+if ($page === 'adicionar-item-colecao') {
+    (new ColecaoController($pdo))->adicionarItem();
+}
+
+if ($page === 'remover-item-colecao') {
+    (new ColecaoController($pdo))->removerItem();
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -22,55 +44,40 @@ $page = $_GET['p'] ?? 'home';
 </head>
 <body>
 
+<<<<<<< HEAD
     <?php require_once("./App/config/database.php"); ?>
+=======
+<?php require_once("./App/View/Components/header.php"); ?>
+>>>>>>> origin/7
 
-    <?php
-        
-        match($page) {
-            
-            'home' => require_once("./App/View/home.php"),
-            'explorar' => require_once("./App/View/explorar.php"),
-            'detalhes' => require_once("./App/View/detalhes.php"),
-            
-            
-            'login' => require_once("./App/View/login.php"),
-            'cadastro-usuario' => require_once("./App/View/cadastro_usuario.php"),
-            'recuperar' => require_once("./App/View/recuperar_senha.php"),
-            
-            'escrever-review' => require_once("./App/View/escrever_review.php"),
-            'minhas-listas' => require_once("./App/View/minhas_listas.php"),
-            
-            'salvar-review' => (function() use ($pdo) {
-                require_once './App/Controller/ReviewController.php';
-                $controller = new ReviewController($pdo);
-                $controller->salvar();
-            })(),
-            'criar-colecao' => (function() use ($pdo) {
-                require_once './App/Controller/ColecaoController.php';
-                $controller = new ColecaoController($pdo);
-                $controller->criar();
-            })(),
-            'adicionar-item-colecao' => (function() use ($pdo) {
-                require_once './App/Controller/ColecaoController.php';
-                $controller = new ColecaoController($pdo);
-                $controller->adicionarItem();
-            })(),
-            'remover-item-colecao' => (function() use ($pdo) {
-                require_once './App/Controller/ColecaoController.php';
-                $controller = new ColecaoController($pdo);
-                $controller->removerItem();
-            })(),
-            'remover-colecao' => (function() use ($pdo) {
-                require_once './App/Controller/ColecaoController.php';
-                $controller = new ColecaoController($pdo);
-                $controller->removerColecao();
-            })(),
-            
-            default => require_once("./App/View/home.php")
-        };
-    ?>
+<?php
+match ($page) {
+    'home' => require_once("./App/View/home.php"),
+    'explorar' => require_once("./App/View/explorar.php"),
+    'sobre' => require_once("./App/View/sobre.php"),
+    'detalhes' => (new ItemController($pdo))->detalhes(),
 
-    <?php require_once("./App/View/components/footer.php"); ?>
+    'listar-itens' => (new ItemController($pdo))->index(),
+    'criar-item' => (new ItemController($pdo))->cadastrar(),
+    'editar-item' => (new ItemController($pdo))->editar(),
+    'excluir-item' => (new ItemController($pdo))->excluir(),
+
+    'login' => require_once("./App/View/login.php"),
+    'cadastro-usuario' => require_once("./App/View/cadastro_usuario.php"),
+    'recuperar' => require_once("./App/View/recuperar_senha.php"),
+
+    'escrever-review' => require_once("./App/View/escrever_review.php"),
+    'salvar-review' => (new ReviewController($pdo))->salvar(),
+
+    'minhas-listas' => (new ColecaoController($pdo))->minhasListas(),
+    
+    'logout' => UsuarioController::logout(),
+
+    default => require_once("./App/View/home.php")
+};
+?>
+
+<?php require_once("./App/View/Components/footer.php"); ?>
 
 </body>
 </html>

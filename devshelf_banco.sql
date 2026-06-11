@@ -1,11 +1,17 @@
--- Script completo para criar o banco e as tabelas necessárias do DevShelf
--- Execute este arquivo no MySQL/MariaDB para preparar o ambiente.
-
 CREATE DATABASE IF NOT EXISTS devshelf CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE devshelf;
 
--- Tabela de usuários (necessária para login, reviews e coleções)
-CREATE TABLE IF NOT EXISTS usuarios (
+SET FOREIGN_KEY_CHECKS = 0;
+
+DROP TABLE IF EXISTS colecao_itens;
+DROP TABLE IF EXISTS reviews;
+DROP TABLE IF EXISTS colecoes;
+DROP TABLE IF EXISTS itens;
+DROP TABLE IF EXISTS usuarios;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
@@ -16,8 +22,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     atualizado_em DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Tabela de itens/catálogo (livros, ferramentas, cursos, setups etc.)
-CREATE TABLE IF NOT EXISTS itens (
+CREATE TABLE itens (
     id INT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(150) NOT NULL,
     categoria VARCHAR(100) NOT NULL,
@@ -26,8 +31,7 @@ CREATE TABLE IF NOT EXISTS itens (
     criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Tabela principal das coleções/favoritos do usuário
-CREATE TABLE IF NOT EXISTS colecoes (
+CREATE TABLE colecoes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
     nome VARCHAR(100) NOT NULL,
@@ -39,8 +43,7 @@ CREATE TABLE IF NOT EXISTS colecoes (
         ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Relação entre coleções e itens adicionados a elas
-CREATE TABLE IF NOT EXISTS colecao_itens (
+CREATE TABLE colecao_itens (
     colecao_id INT NOT NULL,
     item_id INT NOT NULL,
     adicionado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -55,8 +58,7 @@ CREATE TABLE IF NOT EXISTS colecao_itens (
         ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Tabela de avaliações/reviews dos itens
-CREATE TABLE IF NOT EXISTS reviews (
+CREATE TABLE reviews (
     id INT AUTO_INCREMENT PRIMARY KEY,
     item_id INT NOT NULL,
     usuario_id INT NOT NULL,
@@ -74,9 +76,3 @@ CREATE TABLE IF NOT EXISTS reviews (
         ON DELETE CASCADE
         ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- Índices auxiliares para consultas mais rápidas
-CREATE INDEX idx_colecoes_usuario ON colecoes(usuario_id);
-CREATE INDEX idx_colecao_itens_item ON colecao_itens(item_id);
-CREATE INDEX idx_reviews_item ON reviews(item_id);
-CREATE INDEX idx_reviews_usuario ON reviews(usuario_id);

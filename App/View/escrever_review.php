@@ -1,14 +1,3 @@
-<?php
-// bloqueia acesso direto se não estiver logado
-if (empty($_SESSION['usuario_logado'])) {
-    header('Location: ?p=login');
-    exit;
-}
-
-$item_id = (int) ($_GET['id'] ?? 0);
-$erro    = $_GET['erro'] ?? '';
-?>
-
 <main class="container-principal">
     
     <section class="card-item form-review-container">
@@ -18,16 +7,11 @@ $erro    = $_GET['erro'] ?? '';
             <p>Sua opinião ajuda outros desenvolvedores a tomarem decisões melhores.</p>
         </div>
 
-        <?php if ($erro === 'campos'): ?>
-            <p style="color: #f16769; padding: 0.5rem 0;">Preencha todos os campos corretamente.</p>
-        <?php endif; ?>
-
         <form action="?p=salvar-review" method="POST" class="form-autenticacao form-review">
             
             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
-            <input type="hidden" name="item_id" value="<?= htmlspecialchars($_GET['id'] ?? '') ?>"> 
-            
-            <div class="grupo-campo">   
+            <input type="hidden" name="item_id" value="<?= (int) ($_GET['id'] ?? 0) ?>">
+            <div class="grupo-campo">
                 <label for="nota">Nota</label>
                 <select id="nota" name="nota" required class="input-dark">
                     <option value="" disabled selected>Escolha uma nota...</option>
