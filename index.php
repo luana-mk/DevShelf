@@ -7,6 +7,7 @@ require_once('./autoload.php');
 require_once('./App/Config/conexao.php');
 require_once('./App/Controller/UsuarioController.php');
 require_once('./App/Controller/ItemController.php');
+require_once('./App/Controller/ReviewController.php');
 
 UsuarioController::tentarLembrar();
 
@@ -33,7 +34,7 @@ match ($page) {
     'home' => require_once("./App/View/home.php"),
     'explorar' => require_once("./App/View/explorar.php"),
     'sobre' => require_once("./App/View/sobre.php"),
-    'detalhes' => require_once("./App/View/detalhes.php"),
+    'detalhes' => (new ItemController($pdo))->detalhes(),
 
     'listar-itens' => (new ItemController($pdo))->index(),
     'criar-item' => (new ItemController($pdo))->cadastrar(),
@@ -45,6 +46,7 @@ match ($page) {
     'recuperar' => require_once("./App/View/recuperar_senha.php"),
 
     'escrever-review' => require_once("./App/View/escrever_review.php"),
+    'salvar-review' => (new ReviewController($pdo))->salvar(),
 
     'logout' => UsuarioController::logout(),
 

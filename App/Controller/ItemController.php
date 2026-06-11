@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../Config/conexao.php';
 require_once __DIR__ . '/../Model/Item.php';
+require_once __DIR__ . '/../Model/ReviewModel.php';
 
 class ItemController
 {
     private Item $model;
+    private PDO $pdo;
 
     public function __construct(PDO $pdo)
     {
+        $this->pdo = $pdo;
         $this->model = new Item($pdo);
     }
 
@@ -23,7 +26,7 @@ class ItemController
     public function cadastrar(): void
     {
         $this->exigirLogin();
-        
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             require_once __DIR__ . '/../View/criar_item.php';
             return;
@@ -50,46 +53,46 @@ class ItemController
     }
 
     public function editar(): void
-{
-    $this->exigirLogin();
+    {
+        $this->exigirLogin();
 
-    $id = (int) ($_GET['id'] ?? 0);
+        $id = (int) ($_GET['id'] ?? 0);
 
-    if ($id <= 0) {
-        header('Location: ?p=listar-itens&erro=item');
-        exit;
-    }
-
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        if (!$this->validarCsrf()) {
-            die('Token inválido.');
-        }
-
-        $titulo = trim($_POST['titulo'] ?? '');
-        $categoria = trim($_POST['categoria'] ?? '');
-        $descricao = trim($_POST['descricao'] ?? '');
-        $imagem = trim($_POST['imagem'] ?? '');
-
-        if ($titulo === '' || $categoria === '' || $descricao === '') {
-            header('Location: ?p=editar-item&id=' . $id . '&erro=campos');
+        if ($id <= 0) {
+            header('Location: ?p=listar-itens&erro=item');
             exit;
         }
 
-        $this->model->atualizar($id, $titulo, $categoria, $descricao, $imagem);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!$this->validarCsrf()) {
+                die('Token inválido.');
+            }
 
-        header('Location: ?p=listar-itens&sucesso=editado');
-        exit;
+            $titulo = trim($_POST['titulo'] ?? '');
+            $categoria = trim($_POST['categoria'] ?? '');
+            $descricao = trim($_POST['descricao'] ?? '');
+            $imagem = trim($_POST['imagem'] ?? '');
+
+            if ($titulo === '' || $categoria === '' || $descricao === '') {
+                header('Location: ?p=editar-item&id=' . $id . '&erro=campos');
+                exit;
+            }
+
+            $this->model->atualizar($id, $titulo, $categoria, $descricao, $imagem);
+
+            header('Location: ?p=listar-itens&sucesso=editado');
+            exit;
+        }
+
+        $item = $this->model->buscarPorId($id);
+
+        if (!$item) {
+            header('Location: ?p=listar-itens&erro=item-nao-encontrado');
+            exit;
+        }
+
+        require_once __DIR__ . '/../View/editar_item.php';
     }
-
-    $item = $this->model->buscarPorId($id);
-
-    if (!$item) {
-        header('Location: ?p=listar-itens&erro=item-nao-encontrado');
-        exit;
-    }
-
-    require_once __DIR__ . '/../View/editar_item.php';
-}
 
     public function excluir(): void
     {
@@ -114,9 +117,32 @@ class ItemController
         exit;
     }
 
+    public function detalhes(): void
+    {
+        $id = (int) ($_GET['id'] ?? 0);
+
+        if ($id <= 0) {
+            header('Location: ?p=listar-itens&erro=item');
+            exit;
+        }
+
+        $item = $this->model->buscarPorId($id);
+
+        if (!$item) {
+            header('Location: ?p=listar-itens&erro=item-nao-encontrado');
+            exit;
+        }
+
+        $reviewModel = new ReviewModel($this->pdo);
+        $reviews = $reviewModel->buscarPorItem($id);
+
+        require_once __DIR__ . '/../View/detalhes.php';
+    }
+
     private function validarCsrf(): bool
     {
-        return isset($_POST['csrf_token']) && hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token']);
+        return isset($_POST['csrf_token'])
+            && hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token']);
     }
 
     private function exigirLogin(): void

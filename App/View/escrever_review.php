@@ -10,7 +10,8 @@
         <form action="?p=salvar-review" method="POST" class="form-autenticacao form-review">
             
             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
-            <input type="hidden" name="item_id" value="<?= htmlspecialchars($_GET['id'] ?? '') ?>"> <div class="grupo-campo">
+            <input type="hidden" name="item_id" value="<?= (int) ($_GET['id'] ?? 0) ?>">
+            <div class="grupo-campo">
                 <label for="nota">Nota</label>
                 <select id="nota" name="nota" required class="input-dark">
                     <option value="" disabled selected>Escolha uma nota...</option>

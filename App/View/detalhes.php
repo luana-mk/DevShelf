@@ -2,9 +2,15 @@
     
     <section class="item-hero card-item">
         <div class="item-header-info">
-            <span class="tag-categoria cat-hard">Setup & Periféricos</span>
-            <h2>Teclado Mecânico Keychron K2</h2>
-            <p class="marca">Keychron</p>
+            <span class="tag-categoria cat-hard">
+                <?php echo htmlspecialchars($item['categoria']); ?>
+            </span>
+
+            <h2><?php echo htmlspecialchars($item['titulo']); ?></h2>
+
+            <p class="marca">
+                <?php echo htmlspecialchars($item['descricao']); ?>
+            </p>
         </div>
         
         <div class="item-estatisticas">
@@ -13,7 +19,10 @@
                 <div class="estrelas">★★★★★</div>
                 <span class="total-reviews">(128 avaliações)</span>
             </div>
-            <a href="?p=escrever-review&id=5" class="btn-neon">Deixar minha Avaliação</a>
+
+            <a href="?p=escrever-review&id=<?php echo (int) $item['id']; ?>" class="btn-neon">
+                Deixar minha Avaliação
+            </a>
         </div>
     </section>
 
@@ -23,39 +32,44 @@
         </div>
 
         <div class="lista-comentarios">
-            
-            <article class="review-card">
-                <div class="review-header">
-                    <div class="usuario-info">
-                        <div class="avatar-placeholder">D</div>
-                        <div>
-                            <p class="nome-usuario">DevMaster99</p>
-                            <p class="data-postagem">Postado em 18/05/2026</p>
-                        </div>
-                    </div>
-                    <div class="estrelas">★★★★★</div>
-                </div>
-                
-                <h4 class="review-titulo">Switch marrom é perfeito para o escritório</h4>
-                <p class="review-texto">Comprei a versão com switch marrom hotswap. O barulho é super contido, não incomoda ninguém na daily, e a sensação de digitação é incrível. A bateria dura semanas com o RGB desligado.</p>
-            </article>
+            <?php if (empty($reviews)): ?>
+                <p>Ainda não há avaliações para este item.</p>
+            <?php else: ?>
+                <?php foreach ($reviews as $review): ?>
+                    <article class="review-card">
+                        <div class="review-header">
+                            <div class="usuario-info">
+                                <div class="avatar-placeholder">
+                                    <?php echo strtoupper(substr($review['nome_usuario'], 0, 1)); ?>
+                                </div>
 
-            <article class="review-card">
-                <div class="review-header">
-                    <div class="usuario-info">
-                        <div class="avatar-placeholder">F</div>
-                        <div>
-                            <p class="nome-usuario">FrontEnd_Ninja</p>
-                            <p class="data-postagem">Postado em 10/05/2026</p>
-                        </div>
-                    </div>
-                    <div class="estrelas">★★★★☆</div>
-                </div>
-                
-                <h4 class="review-titulo">Ótimo, mas alto.</h4>
-                <p class="review-texto">O teclado é excelente, mas o perfil dele é bem alto. Recomendo comprar um apoio de pulso junto, senão pode dar dor depois de umas 4 horas codando direto.</p>
-            </article>
+                                <div>
+                                    <p class="nome-usuario">
+                                        <?php echo htmlspecialchars($review['nome_usuario']); ?>
+                                    </p>
 
+                                    <p class="data-postagem">
+                                        Postado em <?php echo date('d/m/Y', strtotime($review['criado_em'])); ?>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="estrelas">
+                                <?php echo str_repeat('★', (int) $review['nota']); ?>
+                                <?php echo str_repeat('☆', 5 - (int) $review['nota']); ?>
+                            </div>
+                        </div>
+
+                        <h4 class="review-titulo">
+                            <?php echo htmlspecialchars($review['titulo']); ?>
+                        </h4>
+
+                        <p class="review-texto">
+                            <?php echo nl2br(htmlspecialchars($review['comentario'])); ?>
+                        </p>
+                    </article>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </section>
 
