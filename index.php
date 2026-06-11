@@ -8,6 +8,7 @@ require_once('./App/Config/conexao.php');
 require_once('./App/Controller/UsuarioController.php');
 require_once('./App/Controller/ItemController.php');
 require_once('./App/Controller/ReviewController.php');
+require_once('./App/Controller/ColecaoController.php');
 
 UsuarioController::tentarLembrar();
 
@@ -16,6 +17,22 @@ if (empty($_SESSION['csrf_token'])) {
 }
 
 $page = $_GET['p'] ?? 'home';
+
+if ($page === 'criar-colecao') {
+    (new ColecaoController($pdo))->criar();
+}
+
+if ($page === 'remover-colecao') {
+    (new ColecaoController($pdo))->removerColecao();
+}
+
+if ($page === 'adicionar-item-colecao') {
+    (new ColecaoController($pdo))->adicionarItem();
+}
+
+if ($page === 'remover-item-colecao') {
+    (new ColecaoController($pdo))->removerItem();
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -48,6 +65,8 @@ match ($page) {
     'escrever-review' => require_once("./App/View/escrever_review.php"),
     'salvar-review' => (new ReviewController($pdo))->salvar(),
 
+    'minhas-listas' => (new ColecaoController($pdo))->minhasListas(),
+    
     'logout' => UsuarioController::logout(),
 
     default => require_once("./App/View/home.php")

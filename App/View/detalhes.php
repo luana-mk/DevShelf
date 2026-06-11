@@ -1,5 +1,20 @@
+<?php
+$totalReviews = count($reviews);
+$mediaNota = 0;
+
+if ($totalReviews > 0) {
+    $somaNotas = 0;
+
+    foreach ($reviews as $review) {
+        $somaNotas += (int) $review['nota'];
+    }
+
+    $mediaNota = $somaNotas / $totalReviews;
+}
+?>
+
 <main class="container-principal">
-    
+
     <section class="item-hero card-item">
         <div class="item-header-info">
             <span class="tag-categoria cat-hard">
@@ -12,12 +27,21 @@
                 <?php echo htmlspecialchars($item['descricao']); ?>
             </p>
         </div>
-        
+
         <div class="item-estatisticas">
             <div class="nota-geral">
-                <span class="nota-numero">4.8</span>
-                <div class="estrelas">★★★★★</div>
-                <span class="total-reviews">(128 avaliações)</span>
+                <span class="nota-numero">
+                    <?php echo $totalReviews > 0 ? number_format($mediaNota, 1, ',', '.') : '0,0'; ?>
+                </span>
+
+                <div class="estrelas">
+                    <?php echo str_repeat('★', (int) round($mediaNota)); ?>
+                    <?php echo str_repeat('☆', 5 - (int) round($mediaNota)); ?>
+                </div>
+
+                <span class="total-reviews">
+                    (<?php echo $totalReviews; ?> avaliações)
+                </span>
             </div>
 
             <a href="?p=escrever-review&id=<?php echo (int) $item['id']; ?>" class="btn-neon">

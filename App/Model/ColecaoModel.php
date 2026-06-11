@@ -43,11 +43,16 @@ class ColecaoModel
 
     public function buscarItensDaColecao(int $colecao_id): array
     {
-        $sql = 'SELECT ci.item_id, ci.adicionado_em, c.nome AS nome_colecao
-                FROM colecao_itens ci
-                INNER JOIN colecoes c ON c.id = ci.colecao_id
-                WHERE ci.colecao_id = :colecao_id
-                ORDER BY ci.adicionado_em DESC';
+        $sql = 'SELECT 
+                i.id,
+                i.titulo,
+                i.categoria,
+                i.descricao,
+                ci.adicionado_em
+            FROM colecao_itens ci
+            INNER JOIN itens i ON i.id = ci.item_id
+            WHERE ci.colecao_id = :colecao_id
+            ORDER BY ci.adicionado_em DESC';
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':colecao_id', $colecao_id, PDO::PARAM_INT);
