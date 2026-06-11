@@ -22,6 +22,8 @@ class ItemController
 
     public function cadastrar(): void
     {
+        $this->exigirLogin();
+        
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             require_once __DIR__ . '/../View/criar_item.php';
             return;
@@ -49,6 +51,8 @@ class ItemController
 
     public function editar(): void
 {
+    $this->exigirLogin();
+
     $id = (int) ($_GET['id'] ?? 0);
 
     if ($id <= 0) {
@@ -89,6 +93,8 @@ class ItemController
 
     public function excluir(): void
     {
+        $this->exigirLogin();
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: ?p=listar-itens');
             exit;
@@ -111,5 +117,13 @@ class ItemController
     private function validarCsrf(): bool
     {
         return isset($_POST['csrf_token']) && hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token']);
+    }
+
+    private function exigirLogin(): void
+    {
+        if (empty($_SESSION['usuario_id'])) {
+            header('Location: ?p=login');
+            exit;
+        }
     }
 }
