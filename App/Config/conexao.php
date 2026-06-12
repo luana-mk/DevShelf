@@ -4,6 +4,6 @@ $dbname = 'devshelf';
 $user = 'root';
 $pass = '';
 
-$pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
+$pdo = new PDO("mysql:host=localhost;dbname=devshelf", "root", "root");
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
