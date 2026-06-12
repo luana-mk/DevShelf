@@ -44,11 +44,7 @@ if ($page === 'remover-item-colecao') {
 </head>
 <body>
 
-<<<<<<< HEAD
-    <?php require_once("./App/config/database.php"); ?>
-=======
 <?php require_once("./App/View/Components/header.php"); ?>
->>>>>>> origin/7
 
 <?php
 match ($page) {
